@@ -1,6 +1,6 @@
 ********************************************************************************
 ********************************************************************************
-**********************************  3 EM LP  ***********************************
+***************************  Creating the indexes  *****************************
 ********************************************************************************
 
 **** ÍNDICE DE PRÁTICAS PEDAGÓGICAS - GERAL (IPP_G) ****
@@ -26,7 +26,7 @@ mca TV GELADEIRA FREEZER MAQ CARRO COMP BANHO EMPR
 predict NSE1
 
 *********************************************************************************************************
-***** VAMOS INVERTER A ORDEM DE VALOR DOS INDICADORES E COLOCAR OS INDICADORES EM ESCALA DE 0 a 10  *****
+**** REVERSING THE VALUE ORDER OF THE INDICATORS AND PLACING THE INDICATORS ON A SCALE FROM 0 TO 10  ****
 *********************************************************************************************************
 
 ***************************
@@ -70,7 +70,7 @@ replace NSE1_I=round(NSE1_I, 0.0001)
 sum NSE1_I
 
 *********************************************************************************************************
-*********************************** VARIAVEIS PARA ESTATISTICAS  ****************************************
+****************************** ADAPTING THE VARIABLES TO STATISTICS  ************************************
 *********************************************************************************************************
 gen MASCULINO=.
 replace MASCULINO=1 if GENERO==0
@@ -105,28 +105,28 @@ replace RURAL=1 if LOCALIZACAO==0
 replace RURAL=0 if LOCALIZACAO==1
 
 *********************************************************************************************************
-******************************************** STEP WISE  *************************************************
+************************************** ESTIMATION - STEP WISE  ******************************************
 *********************************************************************************************************
 
-      ** MODELO 1 **
-** Intercepto aleatorio **
+      ** MODEL 1 **
+** Random intercept **
 
 xtmixed LP || ESCOLA: || TURMA: , mle nolog
 
-** Coeficiente intra classe **
+** Intra class coefficient **
 estat icc
 
 
-       ** MODELO 2 **
-       ** alunos **
+       ** MODEL 2 **
+       ** Students **
 	   
 xtmixed LP GENERO RACA ESC_MENOS_8_9_MAE ESC_MENOS_EM_MAE ESC_MENOS_ES_MAE ///
 ESC_ES_MAE ESC_MENOS_8_9_PAI ESC_MENOS_EM_PAI ESC_MENOS_ES_PAI ESC_ES_PAI ///
 REPROV GOSTA_LP NSE1_I || ESCOLA: || TURMA: , mle nolog
 
 
-      ** MODELO 3 **
-       ** professor **
+      ** MODEL 3 **
+       ** Teacher **
 
 xtmixed LP GENERO RACA ESC_MENOS_8_9_MAE ESC_MENOS_EM_MAE ESC_MENOS_ES_MAE ///
 ESC_ES_MAE ESC_MENOS_8_9_PAI ESC_MENOS_EM_PAI ESC_MENOS_ES_PAI ESC_ES_PAI ///
@@ -134,8 +134,8 @@ REPROV GOSTA_LP NSE1_I LATO_PG STRICTO_PG EXP_ESCOLA_M5 RENDA_1E3_PROF ///
 RENDA_3E4_PROF RENDA_4E7_PROF RENDA_7_PROF IPP_G_I IPP_LP_I || ESCOLA: || TURMA: , mle nolog
 
 
-      ** MODELO 4 **
-       ** diretor/escola **
+      ** MODEL 4 **
+       ** Principal/School **
 
 xtmixed LP GENERO RACA ESC_MENOS_8_9_MAE ESC_MENOS_EM_MAE ESC_MENOS_ES_MAE ///
 ESC_ES_MAE ESC_MENOS_8_9_PAI ESC_MENOS_EM_PAI ESC_MENOS_ES_PAI ESC_ES_PAI ///
