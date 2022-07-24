@@ -20,7 +20,7 @@ If you are interested in checking the format of the questions used related to th
 
 ## Code
 
-The code has been split into nine files. I started by performing the previous organization and cleaning of the data in RStudio [(Dissertation)](https://github.com/cfruhauf/Pedagogical_Practices/blob/master/Codes/R%20Script/Dissertation.R). After that, four new R Scripts were created, where students, teachers and schools informations were merged, one script for each model to be estimated: 9th grade of Elementary School Portuguese Language, 9th grade of Elementary School Mathematics, 3rd grade of High School Portuguese Language, and 3rd grade of High School Mathematics.
+The code has been split into nine files. I started by performing the previous organization and cleaning of the data in RStudio ([Dissertation](https://github.com/cfruhauf/Pedagogical_Practices/blob/master/Codes/R%20Script/Dissertation.R)). After that, four new R Scripts were created, where students, teachers and schools informations were merged, one script for each model to be estimated: 9th grade of Elementary School Portuguese Language, 9th grade of Elementary School Mathematics, 3rd grade of High School Portuguese Language, and 3rd grade of High School Mathematics.
 
 After the variables of each model were aggregated in a dataframe, they were exported to the computer. The analysis continued in Stata, where also were created a do-file for each model to criated the index and estimate the models.
 
