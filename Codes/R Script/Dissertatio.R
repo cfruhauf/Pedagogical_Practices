@@ -15,7 +15,7 @@ setwd("~/Dissertação/Dados/2017/DADOS")
 #######################################    9th year of Elementary School   ##########################################
 ALUNO9EF <- read.csv("TS_ALUNO_9EF.csv", header=T,sep=",") #Loading the file
 
-ALUNO9EF <- subset(ALUNO9EF, IN_PREENCHIMENTO_QUESTIONARIO == 1 & IN_PREENCHIMENTO_PROVA == 1) #Excluindo quem provas ou/e questionários em branco
+ALUNO9EF <- subset(ALUNO9EF, IN_PREENCHIMENTO_QUESTIONARIO == 1 & IN_PREENCHIMENTO_PROVA == 1) #Deleting observations with tests or/and blank questionnaires
 
 ALUNO9EF = ALUNO9EF %>% rename(REGIAO = ID_REGIAO, ESCOLA = ID_ESCOLA, DEPENDENCIA_ADM = ID_DEPENDENCIA_ADM,
                                LOCALIZACAO = ID_LOCALIZACAO, TURMA = ID_TURMA, ALUNO = ID_ALUNO,
@@ -24,14 +24,14 @@ ALUNO9EF = ALUNO9EF %>% rename(REGIAO = ID_REGIAO, ESCOLA = ID_ESCOLA, DEPENDENC
                                FREEZER = TX_RESP_Q010, MAQ = TX_RESP_Q011, CARRO = TX_RESP_Q012,
                                COMP = TX_RESP_Q013, BANHO = TX_RESP_Q014, EMPR = TX_RESP_Q017,
                                ESC_MAE = TX_RESP_Q019, ESC_PAI = TX_RESP_Q023, REPROV = TX_RESP_Q048,
-                               GOSTA_LP = TX_RESP_Q050, GOSTA_MT = TX_RESP_Q053) #Renomeando colunas
+                               GOSTA_LP = TX_RESP_Q050, GOSTA_MT = TX_RESP_Q053) #Columns renaming
 
 ALUNO9EF <- ALUNO9EF %>% filter(!GENERO == "" & !RACA == "" & !TV  == "" & !GELADEIRA == "" &
                                 !FREEZER == "" & !MAQ == "" & !CARRO == "" & !COMP == "" &
                                 !BANHO == "" & !EMPR == "" & !ESC_MAE == "" & !ESC_PAI == "" &
-                                !REPROV == "" & !GOSTA_LP == "" & !GOSTA_MT == "") #Retirando observações em branco
+                                !REPROV == "" & !GOSTA_LP == "" & !GOSTA_MT == "") #Deleting other blanks observations
 
-# Padronizar respostas para modelo
+#Standardizing answers to model
 ALUNO9EF <- ALUNO9EF %>%
   mutate(DEPENDENCIA_ADM = case_when(DEPENDENCIA_ADM == "1" ~ "0",  #Federal
                                      DEPENDENCIA_ADM == "2" ~ "0",  #Estadual
@@ -153,12 +153,12 @@ ALUNO9EF <- ALUNO9EF %>%
   mutate(GOSTA_MT = case_when(GOSTA_MT == "A" ~ "1",  #Sim
                               GOSTA_MT == "B" ~ "0")) #Não
 
-# Nota média por turma
+#Average grade per class
 ALUNO9EF_TURMA = ALUNO9EF %>% group_by(TURMA) %>% summarise(MT = mean(MT), LP = mean(LP))
 ALUNO9EF = merge(ALUNO9EF, ALUNO9EF_TURMA, by.x=c("TURMA"),  by.y=c("TURMA"), all=TRUE)
-ALUNO9EF = ALUNO9EF %>% rename(LP = LP.x, LP_TURMA = LP.y, MT = MT.x, MT_TURMA = MT.y) #Renomeando colunas
+ALUNO9EF = ALUNO9EF %>% rename(LP = LP.x, LP_TURMA = LP.y, MT = MT.x, MT_TURMA = MT.y) #Renaming columns
 
-# Criar Dummies
+#Creating dummies
 ALUNO9EF <- cbind(ALUNO9EF, dummy(ALUNO9EF$ESC_MAE, sep = " "))
 ALUNO9EF = ALUNO9EF %>%
   rename(ESC_MENOS_4_5_MAE=`ALUNO9EF 1`,ESC_MENOS_8_9_MAE=`ALUNO9EF 2`,ESC_MENOS_EM_MAE=`ALUNO9EF 3`,
@@ -187,20 +187,20 @@ ALUNO9EF <- transform(ALUNO9EF, TURMA = as.factor(TURMA), ESCOLA = as.factor(ESC
                       ESC_MENOS_8_9_PAI = as.factor(ESC_MENOS_8_9_PAI), ESC_MENOS_EM_PAI = as.factor(ESC_MENOS_EM_PAI),
                       ESC_MENOS_ES_PAI = as.factor(ESC_MENOS_ES_PAI), ESC_ES_PAI = as.factor(ESC_ES_PAI),
                       NORTE = as.factor(NORTE), NORDESTE = as.factor(NORDESTE), SUDESTE = as.factor(SUDESTE),
-                      SUL = as.factor(SUL), CENTRO_OESTE = as.factor(CENTRO_OESTE))# Transformar variáveis em Fatores
+                      SUL = as.factor(SUL), CENTRO_OESTE = as.factor(CENTRO_OESTE))#Transforming variables into Factors
 
-# Língua Portuguesa
-ALUNO9EFLP = ALUNO9EF [,c(7,1,12,30,95,37,38,41,44,46:50,53,96:105,84,86,106:110,8,9)] #Selecionando variáveis
+#Subset to Portuguese Language
+ALUNO9EFLP = ALUNO9EF [,c(7,1,12,30,95,37,38,41,44,46:50,53,96:105,84,86,106:110,8,9)]
 ALUNO9EFLP <- ALUNO9EFLP %>% filter(!is.na(LP))
 
-# Matemática
-ALUNO9EFMT = ALUNO9EF [,c(7,1,12,34,94,37,38,41,44,46:50,53,96:105,84,89,106:110,8,9)] #Selecionando variáveis
+#Subset to Mathematics
+ALUNO9EFMT = ALUNO9EF [,c(7,1,12,34,94,37,38,41,44,46:50,53,96:105,84,89,106:110,8,9)]
 ALUNO9EFMT <- ALUNO9EFMT %>% filter(!is.na(MT))
 
-##################################################    ALUNOS 3 EM   ######################################################
-ALUNO3EM <- read.csv("TS_ALUNO_3EM_ESC.csv", header=T,sep=",") #Carregar arquivo
+##########################################    3rd year of High School   #############################################
+ALUNO3EM <- read.csv("TS_ALUNO_3EM_ESC.csv", header=T,sep=",") #Loading the file
 
-ALUNO3EM <- subset(ALUNO3EM, IN_PREENCHIMENTO_QUESTIONARIO == 1 & IN_PREENCHIMENTO_PROVA == 1) #Excluindo quem provas ou/e questionários em branco
+ALUNO3EM <- subset(ALUNO3EM, IN_PREENCHIMENTO_QUESTIONARIO == 1 & IN_PREENCHIMENTO_PROVA == 1) #Deleting observations with tests or/and blank questionnaires
 
 ALUNO3EM = ALUNO3EM %>% rename(REGIAO = ID_REGIAO, ESCOLA = ID_ESCOLA, DEPENDENCIA_ADM = ID_DEPENDENCIA_ADM,
                                LOCALIZACAO = ID_LOCALIZACAO, TURMA = ID_TURMA, ALUNO = ID_ALUNO,
@@ -209,14 +209,14 @@ ALUNO3EM = ALUNO3EM %>% rename(REGIAO = ID_REGIAO, ESCOLA = ID_ESCOLA, DEPENDENC
                                FREEZER = TX_RESP_Q010, MAQ = TX_RESP_Q011, CARRO = TX_RESP_Q012,
                                COMP = TX_RESP_Q013, BANHO = TX_RESP_Q014, EMPR = TX_RESP_Q017,
                                ESC_MAE = TX_RESP_Q019, ESC_PAI = TX_RESP_Q023, REPROV = TX_RESP_Q041,
-                               GOSTA_LP = TX_RESP_Q044, GOSTA_MT = TX_RESP_Q052) #Renomeando colunas
+                               GOSTA_LP = TX_RESP_Q044, GOSTA_MT = TX_RESP_Q052) #Columns renaming
 
 ALUNO3EM <- ALUNO3EM %>% filter(!GENERO == "" & !RACA == "" & !TV  == "" & !GELADEIRA == "" &
                                 !FREEZER == "" & !MAQ == "" & !CARRO == "" & !COMP == "" &
                                 !BANHO == "" & !EMPR == "" & !ESC_MAE == "" & !ESC_PAI == "" &
-                                !REPROV == "" & !GOSTA_LP == "" & !GOSTA_MT == "") #Retirando observações em branco
+                                !REPROV == "" & !GOSTA_LP == "" & !GOSTA_MT == "") #Deleting other blanks observations
 
-# Padronizar respostas para modelo
+#Standardizing answers to model
 ALUNO3EM <- ALUNO3EM %>%
   mutate(DEPENDENCIA_ADM = case_when(DEPENDENCIA_ADM == "1" ~ "0",  #Federal
                                      DEPENDENCIA_ADM == "2" ~ "0",  #Estadual
@@ -338,12 +338,12 @@ ALUNO3EM <- ALUNO3EM %>%
   mutate(GOSTA_MT = case_when(GOSTA_MT == "A" ~ "1",  #Sim
                               GOSTA_MT == "B" ~ "0")) #Não
 
-# Nota média por turma
+#Average grade per class
 ALUNO3EM_TURMA = ALUNO3EM %>% group_by(TURMA) %>% summarise(MT = mean(MT), LP = mean(LP))
 ALUNO3EM = merge(ALUNO3EM, ALUNO3EM_TURMA, by.x=c("TURMA"),  by.y=c("TURMA"), all=TRUE)
-ALUNO3EM = ALUNO3EM %>% rename(LP = LP.x, LP_TURMA = LP.y, MT = MT.x, MT_TURMA = MT.y) #Renomeando colunas
+ALUNO3EM = ALUNO3EM %>% rename(LP = LP.x, LP_TURMA = LP.y, MT = MT.x, MT_TURMA = MT.y) #Renaming columns
 
-# Criar Dummies
+#Creating dummies
 ALUNO3EM <- cbind(ALUNO3EM, dummy(ALUNO3EM$ESC_MAE, sep = " "))
 ALUNO3EM = ALUNO3EM %>%
   rename(ESC_MENOS_4_5_MAE=`ALUNO3EM 1`,ESC_MENOS_8_9_MAE=`ALUNO3EM 2`,ESC_MENOS_EM_MAE=`ALUNO3EM 3`,
@@ -372,20 +372,20 @@ ALUNO3EM <- transform(ALUNO3EM, TURMA = as.factor(TURMA), ESCOLA = as.factor(ESC
                       ESC_MENOS_8_9_PAI = as.factor(ESC_MENOS_8_9_PAI), ESC_MENOS_EM_PAI = as.factor(ESC_MENOS_EM_PAI),
                       ESC_MENOS_ES_PAI = as.factor(ESC_MENOS_ES_PAI), ESC_ES_PAI = as.factor(ESC_ES_PAI),
                       NORTE = as.factor(NORTE), NORDESTE = as.factor(NORDESTE), SUDESTE = as.factor(SUDESTE),
-                      SUL = as.factor(SUL), CENTRO_OESTE = as.factor(CENTRO_OESTE))# Transformar variáveis em Fatores
+                      SUL = as.factor(SUL), CENTRO_OESTE = as.factor(CENTRO_OESTE))#Transforming variables into Factors
 
-# Língua Portuguesa
-ALUNO3EMLP = ALUNO3EM [,c(7,1,12,30,98,37,38,41,44,46:50,53,99:108,77,80,109:113,8,9)] #Selecionando variáveis
+#Subset to Portuguese Language
+ALUNO3EMLP = ALUNO3EM [,c(7,1,12,30,98,37,38,41,44,46:50,53,99:108,77,80,109:113,8,9)]
 ALUNO3EMLP <- ALUNO3EMLP %>% filter(!is.na(LP))
 
-# Matemática
-ALUNO3EMMT = ALUNO3EM [,c(7,1,12,34,97,37,38,41,44,46:50,53,99:108,77,88,109:113,8,9)] #Selecionando variáveis
+#Subset to Mathematics
+ALUNO3EMMT = ALUNO3EM [,c(7,1,12,34,97,37,38,41,44,46:50,53,99:108,77,88,109:113,8,9)]
 ALUNO3EMMT <- ALUNO3EMMT %>% filter(!is.na(MT))
 
-###################################################    PROFESSORES   ######################################################
-PROF <- read.csv("TS_PROFESSOR.csv", header=T, sep=",") # Carregar arquivo
+#################################################    Teachers   #####################################################
+PROF <- read.csv("TS_PROFESSOR.csv", header=T, sep=",") #Loading the file
 
-PROF <- subset(PROF, IN_PREENCHIMENTO_QUESTIONARIO == 1) # Selecionando apenas observações com preenchimento dos questionários e/ou as provas
+PROF <- subset(PROF, IN_PREENCHIMENTO_QUESTIONARIO == 1) #Deleting observations with blank questionnaires
 
 PROF = PROF %>% rename(TURMA = ID_TURMA, PROFESSOR = CO_PROFESSOR, SERIE = ID_SERIE,
                        PG_PROF = TX_RESP_Q008, RENDA_PROF = TX_RESP_Q010, EXP_ESCOLA_M5 = TX_RESP_Q014,
@@ -394,12 +394,12 @@ PROF = PROF %>% rename(TURMA = ID_TURMA, PROFESSOR = CO_PROFESSOR, SERIE = ID_SE
                        IPP_G_7 = TX_RESP_Q113, IPP_LP_1 = TX_RESP_Q114, IPP_LP_2 = TX_RESP_Q115, IPP_LP_3 = TX_RESP_Q116,
                        IPP_LP_4 = TX_RESP_Q117, IPP_LP_5 = TX_RESP_Q118, IPP_LP_6 = TX_RESP_Q119, IPP_MT_1 = TX_RESP_Q120, 
                        IPP_MT_2 = TX_RESP_Q121, IPP_MT_3 = TX_RESP_Q122,IPP_MT_4 = TX_RESP_Q123, IPP_MT_5 = TX_RESP_Q124, 
-                       IPP_MT_6 = TX_RESP_Q125) #Renomeando colunas
+                       IPP_MT_6 = TX_RESP_Q125) #Columns renaming
 
 PROF$IDENTIFICACAO <- paste(PROF$ID_ESCOLA,PROF$TURMA,PROF$PROFESSOR)
 PROF$DUPLICADOS <- duplicated(PROF$IDENTIFICACAO)
 
-# Retirando professores que responderam o questionário mais de uma vez
+# Deleting duplicate observations from teachers who answered the questionnaire more than once
 DUPLICADOS <- PROF[,c(136,137)]
 DUPLICADOS <- DUPLICADOS %>% filter(DUPLICADOS == TRUE)
 PROF = merge(PROF, DUPLICADOS, by.x=c("IDENTIFICACAO"),  by.y=c("IDENTIFICACAO"), all=TRUE)
@@ -408,8 +408,9 @@ PROF <- PROF[,c(2:136)]
 
 PROF <- PROF %>% filter(!PG_PROF == "" & !RENDA_PROF  == "" & !EXP_ESCOLA_M5 == "" &
                         !IPP_G_1 == "" & !IPP_G_2 == "" & !IPP_G_3 == "" & !IPP_G_4 == "" &
-                        !IPP_G_5 == "" & !IPP_G_6 == "" & !IPP_G_7 == "") #Retirando observações em branco
+                        !IPP_G_5 == "" & !IPP_G_6 == "" & !IPP_G_7 == "") #Deleting other blanks observations
 
+#Standardizing answers to model
 # Questão 8 - Indique o curso de pós-graduação de mais alta titulação que você possui.
 PROF <- PROF %>%
   mutate(PG_PROF = case_when(PG_PROF == "A" ~ "1",  #Não fiz ou não completei curso de pós-graduação
@@ -626,7 +627,7 @@ PROF <- PROF %>%
                               IPP_MT_6 == "E" ~ "2",  #Semanalmente
                               IPP_MT_6 == "F" ~ "2")) #Diariamente
 
-# Criar Dummies
+#Creating dummies
 PROF <- cbind(PROF, dummy(PROF$PG_PROF, sep = " "))
 PROF = PROF %>%
   rename(SEM_PG =`PROF 1`, LATO_PG =`PROF 2`, STRICTO_PG=`PROF 3`)
@@ -648,52 +649,53 @@ PROF <- transform(PROF,ID_ESCOLA = as.factor(ID_ESCOLA), TURMA = as.factor(TURMA
                   IPP_MT_2 = as.factor(IPP_MT_2), IPP_MT_3 = as.factor(IPP_MT_3), IPP_MT_4 = as.factor(IPP_MT_4), 
                   IPP_MT_5 = as.factor(IPP_MT_5), IPP_MT_6 = as.factor(IPP_MT_6), IPP_LP_1 = as.factor(IPP_LP_1),
                   IPP_LP_2 = as.factor(IPP_LP_2), IPP_LP_3 = as.factor(IPP_LP_3), IPP_LP_4 = as.factor(IPP_LP_4), 
-                  IPP_LP_5 = as.factor(IPP_LP_5), IPP_LP_6 = as.factor(IPP_LP_6)) #Transformar variáveis em Fatores 
+                  IPP_LP_5 = as.factor(IPP_LP_5), IPP_LP_6 = as.factor(IPP_LP_6)) #Transforming variables into Factors
 
-############################################## PROFESSORES 9 EF MATEMÁTICA ################################################
+################################### 9th year of Elementary School Mathematics Teachers #####################################
 PROF9EFMT <- PROF %>% filter(SERIE == "9" & DISCIPLINA!="A" & !IPP_MT_1 == "" & 
                              !IPP_MT_2 == "" & !IPP_MT_3 == "" & !IPP_MT_4 == "" &
-                               !IPP_MT_5 == "" & !IPP_MT_6 == "") #Retirando observações em branco
+                               !IPP_MT_5 == "" & !IPP_MT_6 == "") #Deleting other blanks observations
 
 PROF9EFMT1 <- PROF9EFMT
 
-PROF9EFMT = PROF9EFMT [,c(7,8,11,155:157,24,158:162,117:123,130:135)] #Reordenar variáveis
+PROF9EFMT = PROF9EFMT [,c(7,8,11,155:157,24,158:162,117:123,130:135)] #Reordering variables
 
-########################################## PROFESSORES 9 EF LÍNGUA PORTUGUESA #############################################
+############################### 9th year of Elementary School Portuguese Language Teachers #################################
 PROF9EFLP <- PROF %>% filter(SERIE == "9" & DISCIPLINA!="B" & !IPP_LP_1 == "" & 
                                !IPP_LP_2 == "" & !IPP_LP_3 == "" & !IPP_LP_4 == "" &
-                               !IPP_LP_5 == "" & !IPP_LP_6 == "") #Retirando observações em branco
+                               !IPP_LP_5 == "" & !IPP_LP_6 == "") #Deleting other blanks observations
 
 PROF9EFLP1 <- PROF9EFLP
 
 
-PROF9EFLP = PROF9EFLP [,c(7,8,11,155:157,24,158:162,117:129)] #Reordenar variáveis
-############################################## PROFESSORES 3 EM MATEMÁTICA ################################################
+PROF9EFLP = PROF9EFLP [,c(7,8,11,155:157,24,158:162,117:129)] #Reordering variables
+
+###################################### 3rd year of High School Mathematics Teachers ########################################
 PROF3EMMT <- PROF %>% filter(!SERIE == "5" & !SERIE == "9" & DISCIPLINA!="A" & !IPP_MT_1 == "" & 
                                !IPP_MT_2 == "" & !IPP_MT_3 == "" & !IPP_MT_4 == "" &
-                               !IPP_MT_5 == "" & !IPP_MT_6 == "") #Retirando observações em branco
+                               !IPP_MT_5 == "" & !IPP_MT_6 == "") #Deleting other blanks observations
 
 PROF3EMMT1 <- PROF3EMMT
 
-PROF3EMMT = PROF3EMMT [,c(7,8,11,155:157,24,158:162,117:123,130:135)] #Reordenar variáveis
+PROF3EMMT = PROF3EMMT [,c(7,8,11,155:157,24,158:162,117:123,130:135)] #Reordering variables
 
-########################################## PROFESSORES 3 EM LÍNGUA PORTUGUESA #############################################
+################################## 3rd year of High School Portuguese Language Teachers ####################################
 PROF3EMLP <- PROF %>% filter(!SERIE == "5" & !SERIE == "9" & DISCIPLINA!="B" & !IPP_LP_1 == "" & 
                                !IPP_LP_2 == "" & !IPP_LP_3 == "" & !IPP_LP_4 == "" &
-                               !IPP_LP_5 == "" & !IPP_LP_6 == "") #Retirando observações em branco
+                               !IPP_LP_5 == "" & !IPP_LP_6 == "") #Deleting other blanks observations
 
 PROF3EMLP1 <- PROF3EMLP
 
-PROF3EMLP = PROF3EMLP [,c(7,8,11,155:157,24,158:162,117:129)] #Reordenar variáveis
+PROF3EMLP = PROF3EMLP [,c(7,8,11,155:157,24,158:162,117:129)] #Reordering variables
 
-##################################################      DIRETOR     ######################################################
-DIR <- read.csv("TS_DIRETOR.csv", header=T, sep=",") #Carregar arquivo
+###########################################      School Principal     ###############################################
+DIR <- read.csv("TS_DIRETOR.csv", header=T, sep=",") #Loading the file
 
-DIR <- subset(DIR, IN_PREENCHIMENTO_QUESTIONARIO == 1) # Selecionando apenas observações com preenchimento dos questionários e/ou as provas
+DIR <- subset(DIR, IN_PREENCHIMENTO_QUESTIONARIO == 1) #Deleting observations with blank questionnaires
 
-DIR = DIR %>% rename(ESCOLA = ID_ESCOLA, EXP_DIR = TX_RESP_Q016) # Renomeando colunas
+DIR = DIR %>% rename(ESCOLA = ID_ESCOLA, EXP_DIR = TX_RESP_Q016) #Columns renaming
                                        
-# Padronizar respostas para modelo
+#Standardizing answers to model
 # Questão 16 - Há quantos anos você exerce funções de direção?
 DIR$EXP_DIR_M5 <- DIR$EXP_DIR
 DIR <- DIR %>% filter(!EXP_DIR == "") %>% 
@@ -713,7 +715,7 @@ DIR <- DIR %>% filter(!DIR$EXP_DIR_M5 == "") %>%
                                     EXP_DIR_M5 == "E" ~ "1",  #11-15 anos
                                     EXP_DIR_M5 == "F" ~ "1",  #16-20 anos
                                     EXP_DIR_M5 == "G" ~ "1")) #Mais de 20 anos
-# Criar Dummies
+#Creating dummies
 DIR <- cbind(DIR, dummy(DIR$EXP_DIR, sep = " "))
 DIR = DIR %>%
   rename(EXP_DIR_MENOS1 = `DIR 1`, EXP_DIR_1A2 = `DIR 2`, EXP_DIR_3A5 = `DIR 3`,
@@ -722,15 +724,16 @@ DIR = DIR %>%
 DIR <- transform(DIR, ESCOLA = as.factor(ESCOLA), EXP_DIR = as.factor(EXP_DIR),
                  EXP_DIR_MENOS1 = as.factor(EXP_DIR_MENOS1), EXP_DIR_1A2 = as.factor(EXP_DIR_1A2),
                  EXP_DIR_3A5 = as.factor(EXP_DIR_3A5), EXP_DIR_6A10 = as.factor(EXP_DIR_6A10),
-                 EXP_DIR_MAIS10 = as.factor(EXP_DIR_MAIS10)) # Transformar variáveis em Fatores
+                 EXP_DIR_MAIS10 = as.factor(EXP_DIR_MAIS10)) #Transforming variables into Factors
 
-DIR = DIR [,c(4,119:124)] #Reordenar variáveis
+DIR = DIR [,c(4,119:124)] #Reordering variables
 
-###################################################      ESCOLAS     ######################################################
-ESCOLA <- read.csv("TS_ESCOLA.csv", header=T, sep=",") #Carregar arquivo
+################################################      School     ####################################################
+ESCOLA <- read.csv("TS_ESCOLA.csv", header=T, sep=",") #Loading the file
 
-ESCOLA = ESCOLA %>% rename(ESCOLA = ID_ESCOLA, NSE_ESCOLA = NIVEL_SOCIO_ECONOMICO) # Renomeando colunas
+ESCOLA = ESCOLA %>% rename(ESCOLA = ID_ESCOLA, NSE_ESCOLA = NIVEL_SOCIO_ECONOMICO) #Columns renaming
 
+#Standardizing answers to model
 ESCOLA <- ESCOLA %>% 
   mutate(NSE_ESCOLA = case_when(NSE_ESCOLA == "Grupo 1" ~ "1",  # Muito Baixo 
                                 NSE_ESCOLA == "Grupo 2" ~ "2",  #Baixo 
@@ -742,22 +745,24 @@ ESCOLA <- ESCOLA %>%
 ESCOLA <- ESCOLA %>% filter(!is.na(NSE_ESCOLA))
 
 ESCOLA <- transform(ESCOLA, ESCOLA = as.factor(ESCOLA),
-                    NSE_ESCOLA = as.factor(NSE_ESCOLA)) #Transformar variáveis em Fatores
+                    NSE_ESCOLA = as.factor(NSE_ESCOLA)) #Transforming variables into Factors
 
-ESCOLA = ESCOLA [,c(4,10)] #Reordenar variáveis
+ESCOLA = ESCOLA [,c(4,10)] #Reordering variables
 
-#################################################     Estatísticas    #####################################################
-######################################################  GRÁFICO 1  ########################################################
+#################################################     GRAPHICS    #####################################################
+#Joining the graphics created in the other scripts
+
+######################################################  GRAPHIC 1  ########################################################
 g1 + g2 + g3 + g4
 
-######################################################  GRÁFICO 2  ########################################################
+######################################################  GRAPHIC 2  ########################################################
 #IPP_G
 IPP_G_9EFLP + IPP_G_9EFMT + IPP_G_3EMLP + IPP_G_3EMMT
 
-######################################################  GRÁFICO 3  ########################################################
+######################################################  GRAPHIC 3  ########################################################
 #IPP_DISCIPLINAS
 IPP_LP_9EFLP  + IPP_MT_9EFMT + IPP_LP_3EMLP + IPP_MT_3EMMT
 
-######################################################  GRÁFICO 4  ########################################################
+######################################################  GRAPHIC 4  ########################################################
 interesse1 + interesse2 + interesse3 + interesse4
 
