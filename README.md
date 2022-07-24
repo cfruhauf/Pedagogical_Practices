@@ -24,7 +24,7 @@ The code has been split into nine files. I started by performing the previous or
 
 After the variables of each model were aggregated in a dataframe, they were exported to the computer. The analysis continued in Stata, where also were created a do-file for each model to criated the index and estimate the models([9th grade of Elementary School Portuguese Language](https://github.com/cfruhauf/Pedagogical_Practices/blob/master/Codes/Do-File/9th%20grade%20of%20Elementary%20School%20Portuguese%20Language.do); [9th grade of Elementary School Mathematics](https://github.com/cfruhauf/Pedagogical_Practices/blob/master/Codes/Do-File/9th%20grade%20of%20Elementary%20School%20Mathematics.do); [3rd grade of High School Portuguese Language](https://github.com/cfruhauf/Pedagogical_Practices/blob/master/Codes/Do-File/3rd%20grade%20of%20High%20School%20Portuguese%20Language.do); [3rd grade of High School Mathematics](https://github.com/cfruhauf/Pedagogical_Practices/blob/master/Codes/Do-File/3rd%20grade%20of%20High%20School%20Mathematics.do)). Finally, we returned to R with the complete files for estimating statistics and creating graphs.
 
-###<sub>Observation</sub>: All code step-by-step observations are written in English. The code observations related to questionnaires were kept in Portuguese, as well as the name of the variables.
+###**Observation**: All code step-by-step observations are written in English. The code observations related to questionnaires were kept in Portuguese, as well as the name of the variables.
 
 ## Finished dissertation
 
