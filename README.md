@@ -18,19 +18,17 @@ Based on the literature on the subject, 13 control variables were defined to be 
 
 If you are interested in checking the format of the questions used related to the mentioned variables, I added a folder with all the [questionnaires](https://github.com/cfruhauf/Pedagogical_Practices/tree/master/Questionnaires).
 
-## Data organization and data cleaning (on RStudio)
+## Code
 
-Before starting the analysis I loaded the packages that would be used:
+The code has been split into nine files. I started by performing the previous organization and cleaning of the data in RStudio (Dissertation). After that, four new R Scripts were created, where students, teachers and schools informations were merged, one script for each model to be estimated: 9th grade of Elementary School Portuguese Language, 9th grade of Elementary School Mathematics, 3rd grade of High School Portuguese Language, and 3rd grade of High School Mathematics.
 
-```
-library(tidyverse)
-library(dummies)
-library(scales)
-library(patchwork)
-```
-I also set directory that R should use, the one where I had saved the microdata on my computer:
-```
-setwd("~/Dissertation/Data/2017/DATABASE")
+After the variables of each model were aggregated in a dataframe, they were exported to the computer. The analysis continued in Stata, where also were created a do-file for each model to criated the index and estimate the models.
+
+Finally, we returned to R with the complete files for estimating statistics and creating graphs.
+
+
+
+
 ```
 So, I created a data frame for each school level I would analized and for teachers, principals and schools data.
 Starting with Students of 9th year of Elementary School:
