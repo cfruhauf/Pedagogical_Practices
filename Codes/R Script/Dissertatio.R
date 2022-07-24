@@ -1,13 +1,19 @@
-### Pacotes #########
+################################################### Packages ######################################################
+#Before starting the analysis I loaded the packages that would be used:
+
 library(tidyverse)
 library(dummies)
 library(scales)
 library(patchwork)
 
+#I also set directory that R should use, the one where I had saved the microdata on my computer:
+
 setwd("~/Dissertação/Dados/2017/DADOS")
 
-###################################################    ALUNOS 9 EF   ######################################################
-ALUNO9EF <- read.csv("TS_ALUNO_9EF.csv", header=T,sep=",") #Carregar arquivo
+#Next step is created a data frame for each school level I would analized and for teachers, principals and schools data.
+
+#######################################    9th year of Elementary School   ##########################################
+ALUNO9EF <- read.csv("TS_ALUNO_9EF.csv", header=T,sep=",") #Loading the file
 
 ALUNO9EF <- subset(ALUNO9EF, IN_PREENCHIMENTO_QUESTIONARIO == 1 & IN_PREENCHIMENTO_PROVA == 1) #Excluindo quem provas ou/e questionários em branco
 
