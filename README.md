@@ -28,4 +28,4 @@ After the variables of each model were aggregated in a dataframe, they were expo
 
 ## Finished dissertation
 
-This dissertation was concluded and defended by february 2021. If you want to read a copy, to check the results, the statistics and/or the graphics generated, it is disposal [here](https://www.researchgate.net/publication/352092774_Praticas_pedagogicas_e_desempenho_escolar_no_Brasil).
+This dissertation was concluded and defended by february 2021. If you want to read a copy, to check the results, the statistics and/or the graphics generated, it is disposal in Portuguese [here](https://www.researchgate.net/publication/352092774_Praticas_pedagogicas_e_desempenho_escolar_no_Brasil).
